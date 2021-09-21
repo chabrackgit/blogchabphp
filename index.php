@@ -1,5 +1,9 @@
 <?php
 
+require __DIR__.'/database/database.php';
+$authDB = require_once './database/security.php';
+
+$currentUser = $authDB->isLoggedin();
 
 $articleDB = require_once __DIR__ . '/database/models/ArticleDB.php';
 $articles = $articleDB->fetchAll();
@@ -27,11 +31,7 @@ if (count($articles)) {
         return $acc;
     }, []);
 }
-
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -64,6 +64,11 @@ if (count($articles)) {
                                             <div class="img-container" style="background-image:url(<?= $a['image'] ?>"></div>
                                         </div>
                                         <h3><?= $a['title'] ?></h3>
+                                        <?php if($a['author']) : ?>
+                                            <div class="article-author">
+                                                <p><?= $a['firstname'].' '.$a['lastname'] ?></p>
+                                            </div>
+                                        <?php endif; ?>    
                                     </a>
                                 <?php endforeach; ?>
                             </div>

@@ -1,8 +1,8 @@
 <?php
 
-$dns = 'mysql:host=localhost;dbname=blog';
+$dns = 'mysql:host=localhost;dbname=blogdyma';
 $user = 'root';
-$pwd = 'Pomme123;';
+$pwd = '';
 
 try {
     $pdo = new PDO($dns, $user, $pwd, [
@@ -10,7 +10,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 } catch (PDOException $e) {
-    echo "ERROR : " . $e->getMessage();
+    throw new Exception($e->getMessage());
 }
 
 return $pdo;

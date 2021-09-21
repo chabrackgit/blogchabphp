@@ -1,6 +1,14 @@
 <?php
 
+require_once __DIR__.'/database/database.php';
+$authDB = require_once __DIR__.'/database/security.php';
 
+
+$currentUser = $authDB->isLoggedin();
+
+if(!$currentUser){
+    header('Location: /auth-login.php');
+}
 $articleDB = require_once __DIR__ . '/database/models/ArticleDB.php';
 const ERROR_REQUIRED = 'Veuillez renseigner ce champ';
 const ERROR_TITLE_TOO_SHORT = 'Le titre est trop court';
@@ -15,9 +23,12 @@ $errors = [
 $category = '';
 
 $_GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-$id = $_GET['id'] ?? '';
+$id = $_GET['id'] ?? '';    
 if ($id) {
     $article = $articleDB->fetchOne($id);
+    if($article['author'] !== $currentUser['id']){
+        header('Location: /');
+    }
     $title = $article['title'];
     $image = $article['image'];
     $category = $article['category'];
@@ -43,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$title) {
         $errors['title'] = ERROR_REQUIRED;
-    } elseif (mb_strlen($title) < 5) {
+    } elseif (strlen($title) < 5) {
         $errors['title'] = ERROR_TITLE_TOO_SHORT;
     }
 
@@ -57,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['category'] = ERROR_REQUIRED;
     }
 
-    if (!$content) {
-        $errors['content'] = ERROR_REQUIRED;
-    } elseif (mb_strlen($content) < 50) {
-        $errors['content'] = ERROR_CONTENT_TOO_SHORT;
-    }
+    // if (!$content) {
+    //     $errors['content'] = ERROR_REQUIRED;
+    // } elseif (strlen($content) < 50) {
+    //     $errors['content'] = ERROR_CONTENT_TOO_SHORT;
+    // }
 
     if (empty(array_filter($errors, fn ($e) => $e !== ''))) {
         if ($id) {
@@ -69,13 +80,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $article['image'] = $image;
             $article['category'] = $category;
             $article['content'] = $content;
+            $article['author'] = $currentUser['id'];
             $articleDB->updateOne($article);
         } else {
             $articleDB->createOne([
                 'title' => $title,
                 'content' => $content,
                 'category' => $category,
-                'image' => $image
+                'image' => $image,
+                'author' => $currentUser['id']
             ]);
         }
         header('Location: /');
@@ -90,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <?php require_once 'includes/head.php' ?>
-    <link rel="stylesheet" href="/public/css/form-article.css">
+    <!--<link rel="stylesheet" href="/public/css/form-article.css">-->
     <title><?= $id ? 'Modifier' : 'Créer' ?> un article</title>
 </head>
 

@@ -37,6 +37,17 @@
     flex-flow: row nowrap;
 }
 
+@media only screen and (max-width: 800px) {
+    .category-container {
+        display: none;
+    }
+    .articles-container{
+        flex-flow: column;
+        align-items: unset;
+    }
+}
+
+
 .category-container {
     flex: 200px;
 }
@@ -53,4 +64,17 @@
 .cat-active {
     color: var(--primary);
     font-weight: 700;
+}
+
+.article-author {
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    padding-right: 20px;
+}
+
+.article-author p {
+    font-size: 1rem;
+    font-weight: 700;
+    font-style: italic;
 }

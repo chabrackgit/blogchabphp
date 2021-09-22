@@ -53,7 +53,7 @@ class AuthDB {
         return;
     }
 
-    function isLoggedin(): array|false {
+    function isLoggedin(){
         $sessionId = $_COOKIE['session'] ?? '';
         $signature = $_COOKIE['signature'] ?? '';
         if($sessionId && $signature) {

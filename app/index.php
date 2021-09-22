@@ -1,11 +1,11 @@
 <?php
 
-require __DIR__.'/database/database.php';
-$authDB = require_once './database/security.php';
+require __DIR__. '/database/database.php';
+$authDB = require_once __DIR__. '/database/security.php';
 
 $currentUser = $authDB->isLoggedin();
 
-$articleDB = require_once __DIR__ . '/database/models/ArticleDB.php';
+$articleDB = require_once __DIR__ .'/database/models/ArticleDB.php';
 $articles = $articleDB->fetchAll();
 $categories = [];
 

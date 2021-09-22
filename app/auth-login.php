@@ -1,7 +1,7 @@
 <?php
 
-require_once './database/database.php';
-$authDB = require_once './database/security.php';
+require_once __DIR__. '/database/database.php';
+$authDB = require_once __DIR__. '/database/security.php';
 const ERROR_REQUIRED = 'Veuillez renseigner ce champ';
 const ERROR_PASSWORD_TOO_SHORT = 'Le mot de passe doit contenir au moins 6 caractères';
 const ERROR_EMAIL = 'Merci de saisir une adresse email valide';
